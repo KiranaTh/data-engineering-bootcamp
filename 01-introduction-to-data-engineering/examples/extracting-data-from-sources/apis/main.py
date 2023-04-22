@@ -1,7 +1,7 @@
 import requests
 
 
-API_URL = "http://0.0.0.0:8000"
+API_URL = "http://34.87.139.82:8000/"
 DATA = "events"
 DATE = "2021-02-10"
 
