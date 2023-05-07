@@ -87,14 +87,14 @@ files = [
 
 [[package]]
 name = "certifi"
-version = "2022.12.7"
+version = "2023.5.7"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "certifi-2022.12.7-py3-none-any.whl", hash = "sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18"},
-    {file = "certifi-2022.12.7.tar.gz", hash = "sha256:35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3"},
+    {file = "certifi-2023.5.7-py3-none-any.whl", hash = "sha256:c6c2e98f5c7869efca1f8916fed228dd91539f9f1b444c314c06eef02980c716"},
+    {file = "certifi-2023.5.7.tar.gz", hash = "sha256:0f0d56dc5a6ad56fd4ba36484d6cc34451e1c6548c61daad8c320169f91eddc7"},
 ]
 
 [[package]]
@@ -451,6 +451,28 @@ google-auth = ">=1.25.0,<3.0dev"
 
 [package.extras]
 grpc = ["grpcio (>=1.38.0,<2.0dev)"]
+
+[[package]]
+name = "google-cloud-storage"
+version = "2.9.0"
+description = "Google Cloud Storage API client library"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "google-cloud-storage-2.9.0.tar.gz", hash = "sha256:9b6ae7b509fc294bdacb84d0f3ea8e20e2c54a8b4bbe39c5707635fec214eff3"},
+    {file = "google_cloud_storage-2.9.0-py2.py3-none-any.whl", hash = "sha256:83a90447f23d5edd045e0037982c270302e3aeb45fc1288d2c2ca713d27bad94"},
+]
+
+[package.dependencies]
+google-api-core = ">=1.31.5,<2.0.0 || >2.3.0,<3.0.0dev"
+google-auth = ">=1.25.0,<3.0dev"
+google-cloud-core = ">=2.3.0,<3.0dev"
+google-resumable-media = ">=2.3.2"
+requests = ">=2.18.0,<3.0.0dev"
+
+[package.extras]
+protobuf = ["protobuf (<5.0.0dev)"]
 
 [[package]]
 name = "google-crc32c"
@@ -1590,4 +1612,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "11c5b78ab23fe5ebea9f33291b88b684847907dc152ba7cc3298718c77892bf3"
+content-hash = "d3da2e9a5c044b66d674424d7e218dca231c62606585b0b2ce03705f113ad9cc"

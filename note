@@ -1,1 +1,6 @@
 export PROMPT_DIRTRIM=1
+poetry install
+poetry add xxxx
+poetry update
+poetry run python xxxxx
+export KEYFILE_PATH=xxxx.json
