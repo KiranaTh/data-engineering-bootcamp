@@ -4,3 +4,9 @@ poetry add xxxx
 poetry update
 poetry run python xxxxx
 export KEYFILE_PATH=xxxx.json
+
+# run backfill
+docker compose exec <service> bash
+airflow dags backfill -s 2023-01-01 -e 2023-05-13 <dag file.py>
+# ถ้าเคย run ไปแล้วแล้วจะ run ทับ ให้ใส่ --reset-dagruns ตามท้าย
+airflow dags backfill -s 2023-01-01 -e 2023-05-13 <dag file.py> --reset-dagruns
