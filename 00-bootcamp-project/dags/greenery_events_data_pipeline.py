@@ -1,0 +1,107 @@
+import csv
+
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from airflow.utils import timezone
+
+import requests
+
+
+# Import modules regarding GCP service account, BigQuery, and GCS 
+# Your code here
+keyfile = "liquid-optics-384501-cb732b4da753-bq-n-gcs.json"
+service_account_info = json.load(open(keyfile))
+credentials = service_account.Credentials.from_service_account_info(service_account_info)
+project_id = "liquid-optics-384501"
+
+DATA_FOLDER="/opt/airflow/dags"
+BUSINESS_DOMAIN = "greenery"
+location = "asia-southeast1"
+
+
+def _extract_data(ds):
+    url = f"http://34.87.139.82:8000/events/?created_at={ds}"
+    response = requests.get(url)
+    data = response.json()
+
+    with open(f"{DATA_FOLDER}/events-{ds}.csv", "w") as f:
+        writer = csv.writer(f)
+        header = [
+            "event_id",
+            "session_id",
+            "page_url",
+            "created_at",
+            "event_type",
+            "user",
+            "order",
+            "product",
+        ]
+        writer.writerow(header)
+        for each in data:
+            # print(each["event_id"], each["event_type"])
+            data = [
+                each["event_id"],
+                each["session_id"],
+                each["page_url"],
+                each["created_at"],
+                each["event_type"],
+                each["user"],
+                each["order"],
+                each["product"]
+            ]
+            writer.writerow(data)
+
+
+def _load_data_to_gcs():
+    bucket_name = "deb-bootcamp-100005"
+    storage_client = storage.Client(
+        project=project_id,
+        credentials=credentials,
+    )
+    bucket = storage_client.bucket(bucket_name)
+
+    file_path = f"{DATA_FOLDER}/events-{ds}.csv"
+    destination_blob_name = f"{BUSINESS_DOMAIN}/events/events-{ds}.csv"
+    blob = bucket.blob(destination_blob_name)
+    blob.upload_from_filename(file_path)
+
+
+def _load_data_from_gcs_to_bigquery():
+    # Your code below
+    pass
+
+
+default_args = {
+    "owner": "airflow",
+		"start_date": timezone.datetime(2023, 5, 1),  # Set an appropriate start date here
+}
+with DAG(
+    dag_id="greenery_events_data_pipeline",  # Replace xxx with the data name
+    default_args=default_args,
+    schedule=None,  # Set your schedule here
+    catchup=False,
+    tags=["DEB", "2023", "greenery"],
+):
+
+    # Extract data from Postgres, API, or SFTP
+    extract_data = PythonOperator(
+        task_id="extract_data",
+        python_callable=_extract_data,
+        op_kwargs={"ds": "{{ ds }}"},
+    )
+
+    # Load data to GCS
+    load_data_to_gcs = PythonOperator(
+        task_id="load_data_to_gcs",
+        python_callable=_load_data_to_gcs,
+        op_kwargs={"ds": "{{ ds }}"},
+    )
+
+    # Load data from GCS to BigQuery
+    load_data_from_gcs_to_bigquery = PythonOperator(
+        task_id="load_data_from_gcs_to_bigquery",
+        python_callable=_load_data_from_gcs_to_bigquery,
+    )
+
+    # Task dependencies
+    extract_data >> load_data_to_gcs >> load_data_from_gcs_to_bigquery
