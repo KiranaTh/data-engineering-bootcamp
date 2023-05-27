@@ -14,7 +14,7 @@ BUSINESS_DOMAIN = "greenery"
 LOCATION = "asia-southeast1"
 PROJECT_ID = "liquid-optics-384501"
 DAGS_FOLDER = "/opt/airflow/dags"
-DATA = "addresses"
+DATA = "products"
 
 
 def _extract_data():
@@ -25,20 +25,18 @@ def _extract_data():
     with open(f"{DAGS_FOLDER}/{DATA}.csv", "w") as f:
         writer = csv.writer(f)
         header = [
-            "address_id",
-            "address",
-            "zipcode",
-            "state",
-            "country",
+            "product_id",
+            "name",
+            "price",
+            "inventory"
         ]
         writer.writerow(header)
         for each in data:
             data = [
-                each["address_id"],
-                each["address"],
-                each["zipcode"],
-                each["state"],
-                each["country"],
+                each["product_id"],
+                each["name"],
+                each["price"],
+                each["inventory"]
             ]
             writer.writerow(data)
 
@@ -104,7 +102,7 @@ default_args = {
     "start_date": timezone.datetime(2021, 2, 9),
 }
 with DAG(
-    dag_id="greenery_addresses_data_pipeline",
+    dag_id="greenery_products_data_pipeline",
     default_args=default_args,
     schedule="@daily",
     catchup=False,

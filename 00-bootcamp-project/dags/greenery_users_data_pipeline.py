@@ -14,7 +14,7 @@ BUSINESS_DOMAIN = "greenery"
 LOCATION = "asia-southeast1"
 PROJECT_ID = "liquid-optics-384501"
 DAGS_FOLDER = "/opt/airflow/dags"
-DATA = "events"
+DATA = "users"
 
 
 def _extract_data(ds):
@@ -26,26 +26,26 @@ def _extract_data(ds):
         with open(f"{DAGS_FOLDER}/{DATA}-{ds}.csv", "w") as f:
             writer = csv.writer(f)
             header = [
-                "event_id",
-                "session_id",
-                "page_url",
+                "user_id",
+                "first_name",
+                "last_name",
+                "email",
+                "phone_number",
                 "created_at",
-                "event_type",
-                "user",
-                "order",
-                "product",
+                "updated_at",
+                "address"
             ]
             writer.writerow(header)
             for each in data:
                 data = [
-                    each["event_id"],
-                    each["session_id"],
-                    each["page_url"],
+                    each["user_id"],
+                    each["first_name"],
+                    each["last_name"],
+                    each["email"],
+                    each["phone_number"],
                     each["created_at"],
-                    each["event_type"],
-                    each["user"],
-                    each["order"],
-                    each["product"]
+                    each["updated_at"],
+                    each["address"]
                 ]
                 writer.writerow(data)
 
@@ -67,6 +67,7 @@ def _load_data_to_gcs(ds):
 
     file_path = f"{DAGS_FOLDER}/{DATA}-{ds}.csv"
     destination_blob_name = f"{BUSINESS_DOMAIN}/{DATA}/{ds}/{DATA}.csv"
+    print('destination_blob_name gcs--->', file_path)
     blob = bucket.blob(destination_blob_name)
     try:
         blob.upload_from_filename(file_path)
@@ -74,7 +75,9 @@ def _load_data_to_gcs(ds):
         pass
 
 
-def _load_data_from_gcs_to_bigquery(ds):
+def _load_data_from_gcs_to_bigquery(**context):
+    ds = context["data_interval_start"].to_date_string()
+    print('ds-->', ds)
     keyfile_gcs = "/opt/airflow/dags/liquid-optics-384501-cb732b4da753-bq-n-gcs.json"
     service_account_info_gcs = json.load(open(keyfile_gcs))
     credentials_gcs = service_account.Credentials.from_service_account_info(
@@ -83,6 +86,7 @@ def _load_data_from_gcs_to_bigquery(ds):
     
     bucket_name = "deb-bootcamp-100005"
     destination_blob_name = f"{BUSINESS_DOMAIN}/{DATA}/{ds}/{DATA}.csv"
+    print('bf destination_blob_name--->', destination_blob_name)
     storage_client = storage.Client(
         project=PROJECT_ID,
         credentials=credentials_gcs,
@@ -113,10 +117,12 @@ def _load_data_from_gcs_to_bigquery(ds):
                 type_=bigquery.TimePartitioningType.DAY,
                 field="created_at",
             ),
+            clustering_fields=["first_name", "last_name"],
         )
 
         bucket_name = "deb-bootcamp-100005"
         destination_blob_name = f"{BUSINESS_DOMAIN}/{DATA}/{ds}/{DATA}.csv"
+        print('exist--->', destination_blob_name)
         job = bigquery_client.load_table_from_uri(
             f"gs://{bucket_name}/{destination_blob_name}",
             table_id,
@@ -134,7 +140,7 @@ default_args = {
     "start_date": timezone.datetime(2021, 2, 9),
 }
 with DAG(
-    dag_id="greenery_events_data_pipeline",
+    dag_id="greenery_users_data_pipeline",
     default_args=default_args,
     schedule="@daily",
     catchup=False,
@@ -159,7 +165,6 @@ with DAG(
     load_data_from_gcs_to_bigquery = PythonOperator(
         task_id="load_data_from_gcs_to_bigquery",
         python_callable=_load_data_from_gcs_to_bigquery,
-        op_kwargs={"ds": "{{ ds }}"},
     )
 
     # Task dependencies

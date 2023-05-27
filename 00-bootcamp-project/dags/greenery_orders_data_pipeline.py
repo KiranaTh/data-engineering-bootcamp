@@ -14,7 +14,7 @@ BUSINESS_DOMAIN = "greenery"
 LOCATION = "asia-southeast1"
 PROJECT_ID = "liquid-optics-384501"
 DAGS_FOLDER = "/opt/airflow/dags"
-DATA = "events"
+DATA = "orders"
 
 
 def _extract_data(ds):
@@ -26,26 +26,36 @@ def _extract_data(ds):
         with open(f"{DAGS_FOLDER}/{DATA}-{ds}.csv", "w") as f:
             writer = csv.writer(f)
             header = [
-                "event_id",
-                "session_id",
-                "page_url",
+                "order_id",
                 "created_at",
-                "event_type",
+                "order_cost",
+                "shipping_cost",
+                "order_total",
+                "tracking_id",
+                "shipping_service",
+                "estimated_delivery_at",
+                "delivered_at",
+                "status",
                 "user",
-                "order",
-                "product",
+                "promo",
+                "address"
             ]
             writer.writerow(header)
             for each in data:
                 data = [
-                    each["event_id"],
-                    each["session_id"],
-                    each["page_url"],
+                    each["order_id"],
                     each["created_at"],
-                    each["event_type"],
+                    each["order_cost"],
+                    each["shipping_cost"],
+                    each["order_total"],
+                    each["tracking_id"],
+                    each["shipping_service"],
+                    each["estimated_delivery_at"],
+                    each["delivered_at"],
+                    each["status"],
                     each["user"],
-                    each["order"],
-                    each["product"]
+                    each["promo"],
+                    each["address"]
                 ]
                 writer.writerow(data)
 
@@ -134,7 +144,7 @@ default_args = {
     "start_date": timezone.datetime(2021, 2, 9),
 }
 with DAG(
-    dag_id="greenery_events_data_pipeline",
+    dag_id="greenery_orders_data_pipeline",
     default_args=default_args,
     schedule="@daily",
     catchup=False,
