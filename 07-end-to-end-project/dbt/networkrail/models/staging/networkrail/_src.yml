@@ -10,7 +10,7 @@ sources:
         description: Network Rail movement data
         columns:
           - name: event_type
-            description: 	The type of event - either "ARRIVAL" or "DEPARTURE"
+            description: The type of event either ARRIVAL or DEPARTURE
           - name: gbtt_timestamp
             description: The planned GBTT (passenger) date and time that the event was due to happen at this location
           - name: original_loc_stanox
@@ -18,23 +18,23 @@ sources:
           - name: planned_timestamp
             description: The planned date and time that this event was due to happen at this location
           - name: timetable_variation
-            description: The number of minutes variation from the scheduled time at this location. Off-route reports will contain "0"
+            description: The number of minutes variation from the scheduled time at this location. Off-route reports will contain 0
           - name: original_loc_timestamp
             description: The planned time associated with the original location
           - name: current_train_id
             description: Where a train has had its identity changed, the current 10-character unique identity for this train
           - name: delay_monitoring_point
-            description: Set to "true" if this is a delay monitoring point, "false" if it is not. Off-route reports will contain "false"
+            description: Set to true if this is a delay monitoring point, false if it is not. Off-route reports will contain false
           - name: next_report_run_time
             description: The running time to the next location
           - name: reporting_stanox
-            description: The STANOX of the location that generated this report. Set to "00000" for manual and off-route reports
+            description: The STANOX of the location that generated this report. Set to 00000 for manual and off-route reports
           - name: actual_timestamp
             description: The date and time that this event happened at the location
           - name: correction_ind
-            description: Set to "false" if this report is not a correction of a previous report, or "true" if it is
+            description: Set to false if this report is not a correction of a previous report, or true if it is
           - name: event_source
-            description: Whether the event source was "AUTOMATIC" from SMART, or "MANUAL" from TOPS or TRUST SDR
+            description: Whether the event source was AUTOMATIC from SMART, or MANUAL from TOPS or TRUST SDR
           - name: train_file_address
             description: The TOPS train file address, if applicable
           - name: platform
@@ -42,13 +42,13 @@ sources:
           - name: division_code
             description: Operating company ID as per TOC Codes
           - name: train_terminated
-            description: Set to "true" if the train has completed its journey, or "false" otherwise
+            description: Set to true if the train has completed its journey, or false otherwise
           - name: train_id
             description: The 10-character unique identity for this train at TRUST activation time
           - name: offroute_ind
-            description: Set to "false" if this report is for a location in the schedule, or "true" if it is not
+            description: Set to false if this report is for a location in the schedule, or true if it is not
           - name: variation_status
-            description: One of "ON TIME", "EARLY", "LATE" or "OFF ROUTE"
+            description: One of ON TIME, EARLY, LATE or OFF ROUTE
           - name: train_service_code
             description: Train service code as per schedule
           - name: toc_id
@@ -56,13 +56,13 @@ sources:
           - name: loc_stanox
             description: The STANOX of the location at which this event happened
           - name: auto_expected
-            description: Set to "true" if an automatic report is expected for this location, otherwise "false"
+            description: Set to true if an automatic report is expected for this location, otherwise false
           - name: direction_ind
-            description: For automatic reports, either "UP" or "DOWN" depending on the direction of travel
+            description: For automatic reports, either UP or DOWN depending on the direction of travel
           - name: route
             description: A number or blank to indicate the exit route from this location. A value of 'F' indicates the train failed to stop here
           - name: planned_event_type
-            description: The planned type of event - one of "ARRIVAL", "DEPARTURE" or "DESTINATION"
+            description: The planned type of event - one of ARRIVAL, DEPARTURE or DESTINATION
           - name: next_report_stanox
             description: The STANOX of the location at which the next report for this train is due
           - name: line_ind
