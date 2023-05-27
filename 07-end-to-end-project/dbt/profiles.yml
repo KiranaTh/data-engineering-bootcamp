@@ -1,0 +1,21 @@
+networkrail:
+  target: dbt_jill
+
+  outputs:
+    dbt_jill:
+      type: bigquery
+      method: service-account
+      project: liquid-optics-384501
+      dataset: dbt_jill
+      threads: 1
+      keyfile: /Users/kiranathanasuttiwat/skooldio/data-engineering-bootcamp/07-end-to-end-project/dags/liquid-optics-384501-cb732b4da753-bq-n-gcs.json
+      location: asia-southeast1
+
+    prod:
+      type: bigquery
+      method: service-account
+      project: liquid-optics-384501
+      dataset: networkrail
+      threads: 1
+      keyfile: /Users/kiranathanasuttiwat/skooldio/data-engineering-bootcamp/07-end-to-end-project/dags/liquid-optics-384501-cb732b4da753-bq-n-gcs.json
+      location: asia-southeast1
