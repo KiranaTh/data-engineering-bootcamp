@@ -1,0 +1,42 @@
+greenery:
+
+  outputs:
+    dbt_jill:
+      type: postgres
+      threads: 1
+      host: localhost
+      port: 5432
+      user: postgres
+      pass: "{{ env_var('DBT_ENV_SECRET_PG_PASSWORD') }}"
+      dbname: greenery
+      schema: dbt_jill
+
+    prod:
+      type: postgres
+      threads: 1
+      host: localhost
+      port: 5432
+      user: postgres
+      pass: "{{ env_var('DBT_ENV_SECRET_PG_PASSWORD') }}"
+      dbname: greenery
+      schema: prod
+
+    dbt_jill_bigquery:
+      type: bigquery
+      method: service-account
+      project: liquid-optics-384501
+      dataset: dbt_jill
+      threads: 1
+      keyfile: /Users/kiranathanasuttiwat/skooldio/data-engineering-bootcamp/00-bootcamp-project/liquid-optics-384501-cb732b4da753-bq-n-gcs.json
+      location: asia-southeast1
+
+    prod_bigquery:
+      type: bigquery
+      method: service-account
+      project: liquid-optics-384501
+      dataset: deb_bootcamp
+      threads: 1
+      keyfile: /Users/kiranathanasuttiwat/skooldio/data-engineering-bootcamp/00-bootcamp-project/liquid-optics-384501-cb732b4da753-bq-n-gcs.json
+      location: asia-southeast1
+
+  target: dbt_jill_bigquery
